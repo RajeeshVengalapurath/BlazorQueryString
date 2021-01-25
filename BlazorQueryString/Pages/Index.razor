@@ -1,7 +1,21 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.WebUtilities
+@inject NavigationManager NavigationManager
 
-<h1>Hello, world!</h1>
+<p>queryValue: @queryValue</p>
 
-Welcome to your new app.
+@code {
+    private string queryValue = "A query string for 'ship' isn't present.";
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    protected override void OnInitialized()
+    {
+        string query = new Uri(NavigationManager.Uri).Query; //?ship=Titanic&ship2=AnyShip
+
+        if (QueryHelpers.ParseQuery(query).TryGetValue("ship", out var value))
+        {
+            queryValue = value;
+        }
+    }
+}
+
+@*https://localhost:44377/?ship=Titanic*@
